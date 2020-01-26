@@ -1,0 +1,90 @@
+﻿@model IEnumerable<ToDoList.Models.Models.Task>
+
+
+<script type="text/javascript">
+    setInterval(
+        function () {
+            $.ajax({
+                url: "/Home/Timer",
+                type: "POST",
+                dataType: "json",
+                success: function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        var text = "Task Time\nName: " + data[i].Name + " \nContent: " + data[i].Content;
+                         alert(text);
+                    }
+
+                }
+            });
+        }, 8000)
+</script>
+
+
+@Html.ActionLink("Create Task", "Create", "Home")
+
+
+<table border="1" cellpadding="10">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Content)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Priorty)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TaskDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Status)
+        </th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.ActionLink(item.Name.ToString(), "Modify", "Home", new { id = item.Id }, new { })
+            </td>
+            <td>
+                @item.Content
+            </td>
+            <td>
+                @item.Priorty.ToString()
+            </td>
+            <td>
+                @item.TaskDate.ToString()
+            </td>
+            <td>
+
+                @{
+                    if (item.Status)
+                    {
+                        <label>Completed</label>
+                    }
+                    else
+                    {
+                        <label>Waiting</label>
+                    }
+                }
+            </td>
+            <td>
+                @{
+                    if (!item.Status)
+                    {
+                        @Html.ActionLink("Complete", "CompleteTask", new { id = item.Id },
+
+                            new { onclick = "return confirm('Are sure wants to complete Task?');" })
+                    }
+                }
+
+            </td>
+            <td>
+                @Html.ActionLink("Delete", "TaskDelete", "Home", new { id = item.Id }, new { })
+            </td>
+        </tr>
+
+
+    }
+</table>
